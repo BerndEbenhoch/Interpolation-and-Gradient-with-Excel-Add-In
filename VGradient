@@ -1,0 +1,46 @@
+Public Function VGradient(Target_Value As Double, Matrix As Range, Optional Row_Index As Double = -1) As Variant
+
+A = Matrix.Rows.Count
+b = Matrix.Columns.Count
+
+If Row_Index = -1 Then
+Column_Index = A
+End If
+
+If Row_Index > A Then
+Exit Function
+End If
+
+If Target_Value = Matrix.Cells(1, b) Then
+Index = b - 1
+Index2 = b
+GoTo mir
+End If
+
+Index = 0
+For i = 1 To b - 1
+If Target_Value = Matrix.Cells(1, i) Then
+Index = i
+Index2 = i + 1
+Exit For
+End If
+
+If (Target_Value > Matrix.Cells(1, i) And Target_Value < Matrix.Cells(1, i + 1)) Or (Target_Value < Matrix.Cells(1, i) And Target_Value > Matrix.Cells(1, i + 1)) Then
+Index = i
+Index2 = i + 1
+Exit For
+End If
+Next i
+
+If Index = 0 Then
+VGradient = "Out of Range"
+Exit Function
+End If
+
+mir:
+m = (Matrix.Cells(Row_Index, Index) - Matrix.Cells(Row_Index, Index2)) / (Matrix.Cells(1, Index) - Matrix.Cells(1, Index2))
+b = Matrix.Cells(Row_Index, Index2) - m * Matrix.Cells(1, Index2)
+
+VGradient = m
+
+End Function
