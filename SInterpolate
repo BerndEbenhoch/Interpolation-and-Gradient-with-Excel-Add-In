@@ -1,0 +1,42 @@
+Public Function SInterpolate(Target_Value As Double, Matrix As Range, Optional Column_Index As Double = -1) As Variant
+
+A = Matrix.Columns.Count
+b = Matrix.Rows.Count
+
+If Column_Index = -1 Then
+Column_Index = A
+End If
+
+If Column_Index > A Then
+Exit Function
+End If
+
+Index = 0
+For i = 1 To b - 1
+If Target_Value = Matrix.Cells(i, 1) Then
+SInterpolate = Matrix.Cells(i, Column_Index)
+Exit Function
+End If
+If Target_Value = Matrix.Cells(i + 1, 1) Then
+SInterpolate = Matrix.Cells(i + 1, Column_Index)
+Exit Function
+End If
+
+If (Target_Value > Matrix.Cells(i, 1) And Target_Value < Matrix.Cells(i + 1, 1)) Or (Target_Value < Matrix.Cells(i, 1) And Target_Value > Matrix.Cells(i + 1, 1)) Then
+Index = i
+Index2 = i + 1
+Exit For
+End If
+Next i
+
+If Index = 0 Then
+SInterpolate = "Out of Range"
+Exit Function
+End If
+
+m = (Matrix.Cells(Index, Column_Index) - Matrix.Cells(Index2, Column_Index)) / (Matrix.Cells(Index, 1) - Matrix.Cells(Index2, 1))
+b = Matrix.Cells(Index2, Column_Index) - m * Matrix.Cells(Index2, 1)
+
+SInterpolate = m * Target_Value + b
+
+End Function
